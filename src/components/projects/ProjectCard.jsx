@@ -7,6 +7,7 @@ import { ArrowUpRight, Github, CheckCircle2, ChevronRight, Sparkles } from 'luci
 import CareerLensVisualizer from './CareerLensVisualizer';
 import AgriInsightVisualizer from './AgriInsightVisualizer';
 import YTGptVisualizer from './YTGptVisualizer';
+import SukoonVisualizer from './SukoonVisualizer';
 import CareerLensPipelineGraphic from './CareerLensPipelineGraphic';
 import AgriInsightChartGraphic from './AgriInsightChartGraphic';
 import YTGptRetrievalGraphic from './YTGptRetrievalGraphic';
@@ -37,6 +38,14 @@ const PROJECT_THEMES = {
     glowGradient: 'from-sky-500/5 via-transparent to-transparent',
     accentText: 'text-sky-400',
     accentBorder: 'border-sky-500/30',
+  },
+  sukoon: {
+    badge: 'border-teal-500/30 text-teal-300 bg-teal-500/10',
+    panelGlow: 'hover:shadow-[0_0_40px_rgba(20,184,166,0.14)] border-teal-500/20 hover:border-teal-500/40',
+    accentRgb: [20, 184, 166],
+    glowGradient: 'from-teal-500/5 via-transparent to-transparent',
+    accentText: 'text-teal-400',
+    accentBorder: 'border-teal-500/30',
   },
 };
 
@@ -187,6 +196,7 @@ export default function ProjectCard({ project, index }) {
               {project.id === 'careerlens' && <CareerLensVisualizer />}
               {project.id === 'agriinsight' && <AgriInsightVisualizer />}
               {project.id === 'yt-gpt' && <YTGptVisualizer />}
+              {project.id === 'sukoon' && <SukoonVisualizer />}
             </div>
 
           </div>

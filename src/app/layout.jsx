@@ -5,6 +5,7 @@ import Footer from "@/components/footer/Footer";
 import CommandPalette from "@/components/navigation/CommandPalette";
 
 export const metadata = {
+  metadataBase: new URL('https://siddharth-mishra.dev'),
   title: siteConfig.title,
   description: siteConfig.subheadline,
   keywords: [

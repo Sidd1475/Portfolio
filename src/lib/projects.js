@@ -316,7 +316,7 @@ export const projects = [
     github: "https://github.com/Kinshuk19/SukoonAI---Mental-Wellness-and-Productivity-Booster",
     liveDemo: "https://sukoon-ai.vercel.app/",
     isFlagship: false,
-    featured: false,
+    featured: true,
     visibility: "public",
     engineeringTradeoff: "Enforced strict client-side anonymization and zero-telemetry private sessions ('Ghost Mode') to maximize user trust and psychological safety, paired with deterministic regex-based guardrails that instantly surface verified crisis hotlines when self-harm indicators are detected.",
     limitations: "Engineered strictly as an assistive mindfulness companion and supportive sounding board; explicitly not a diagnostic clinical tool or replacement for licensed psychotherapy and emergency psychiatric care.",
