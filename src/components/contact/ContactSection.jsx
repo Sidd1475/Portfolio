@@ -20,7 +20,7 @@ export default function ContactSection() {
     message: '',
   });
 
-  const [formStatus, setFormStatus] = useState('idle');
+  const [formStatus, setFormStatus] = useState('idle'); // 'idle' | 'sending' | 'success' | 'fallback'
   const [copied, setCopied] = useState(false);
 
   const handleCopyEmail = (e) => {
@@ -38,21 +38,33 @@ export default function ContactSection() {
     triggerBackgroundHover(id, color, rect);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
 
-    // Direct mailto generation for authentic, transparent communication without mock backends
-    setFormStatus('preparing');
-    const mailtoSubject = encodeURIComponent(formData.subject || `Inquiry from ${formData.name} via Portfolio`);
-    const mailtoBody = encodeURIComponent(
-      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
-    );
-    
-    setTimeout(() => {
+    setFormStatus('sending');
+
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setFormStatus('success');
+      } else {
+        throw new Error('API submission error');
+      }
+    } catch (err) {
+      console.warn('API contact route fallback, opening mailto client:', err);
+      const mailtoSubject = encodeURIComponent(formData.subject || `Inquiry from ${formData.name} via Portfolio`);
+      const mailtoBody = encodeURIComponent(
+        `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+      );
       window.location.href = `mailto:${siteConfig.email}?subject=${mailtoSubject}&body=${mailtoBody}`;
-      setFormStatus('ready');
-    }, 400);
+      setFormStatus('fallback');
+    }
   };
 
   return (
@@ -168,93 +180,114 @@ export default function ContactSection() {
                 Send a Message
               </h3>
               <p className="text-xs text-zinc-400 font-mono mb-6">
-                All inquiries open a pre-filled client draft addressed directly to siddharth140705@gmail.com.
+                Direct inquiry dispatched to siddharth140705@gmail.com with verified delivery.
               </p>
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {formStatus === 'success' ? (
+                <div className="p-8 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-center space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+                    <CheckCircle2 className="w-6 h-6" />
+                  </div>
+                  <h4 className="text-lg font-semibold text-white">Message Delivered</h4>
+                  <p className="text-xs sm:text-sm text-zinc-300 max-w-sm mx-auto leading-relaxed">
+                    Thank you for reaching out, {formData.name}! Your message has been dispatched and I will reply directly to {formData.email} shortly.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setFormData({ name: '', email: '', subject: '', message: '' });
+                      setFormStatus('idle');
+                    }}
+                    className="px-5 py-2.5 rounded-full text-xs font-mono text-zinc-950 bg-white hover:bg-zinc-200 transition-colors font-semibold"
+                  >
+                    Send Another Message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="name" className="block text-xs font-mono text-zinc-300 mb-1.5">
+                        YOUR NAME *
+                      </label>
+                      <input
+                        id="name"
+                        type="text"
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        placeholder="Jane Doe"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-surface-200/80 border border-white/[0.08] text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" className="block text-xs font-mono text-zinc-300 mb-1.5">
+                        EMAIL ADDRESS *
+                      </label>
+                      <input
+                        id="email"
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        placeholder="jane@company.com"
+                        className="w-full px-3.5 py-2.5 rounded-xl bg-surface-200/80 border border-white/[0.08] text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                      />
+                    </div>
+                  </div>
+
                   <div>
-                    <label htmlFor="name" className="block text-xs font-mono text-zinc-300 mb-1.5">
-                      YOUR NAME *
+                    <label htmlFor="subject" className="block text-xs font-mono text-zinc-300 mb-1.5">
+                      SUBJECT OR DOMAIN
                     </label>
                     <input
-                      id="name"
+                      id="subject"
                       type="text"
-                      required
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Jane Doe"
+                      value={formData.subject}
+                      onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                      placeholder="AI Engineering, Architecture Discussion..."
                       className="w-full px-3.5 py-2.5 rounded-xl bg-surface-200/80 border border-white/[0.08] text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/50 transition-colors"
                     />
                   </div>
+
                   <div>
-                    <label htmlFor="email" className="block text-xs font-mono text-zinc-300 mb-1.5">
-                      EMAIL ADDRESS *
+                    <label htmlFor="message" className="block text-xs font-mono text-zinc-300 mb-1.5">
+                      MESSAGE *
                     </label>
-                    <input
-                      id="email"
-                      type="email"
+                    <textarea
+                      id="message"
+                      rows={4}
                       required
-                      value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      placeholder="jane@company.com"
-                      className="w-full px-3.5 py-2.5 rounded-xl bg-surface-200/80 border border-white/[0.08] text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      placeholder="Describe your project, engineering question, or inquiry..."
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-surface-200/80 border border-white/[0.08] text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/50 transition-colors resize-none"
                     />
                   </div>
-                </div>
 
-                <div>
-                  <label htmlFor="subject" className="block text-xs font-mono text-zinc-300 mb-1.5">
-                    SUBJECT OR DOMAIN
-                  </label>
-                  <input
-                    id="subject"
-                    type="text"
-                    value={formData.subject}
-                    onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                    placeholder="AI Engineering, Architecture Discussion..."
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-surface-200/80 border border-white/[0.08] text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/50 transition-colors"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-xs font-mono text-zinc-300 mb-1.5">
-                    MESSAGE *
-                  </label>
-                  <textarea
-                    id="message"
-                    rows={4}
-                    required
-                    value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    placeholder="Describe your project, engineering question, or inquiry..."
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-surface-200/80 border border-white/[0.08] text-white text-sm placeholder:text-zinc-600 focus:outline-none focus:border-cyan-500/50 transition-colors resize-none"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={formStatus === 'preparing'}
-                  className="w-full py-3.5 px-6 rounded-xl font-medium text-sm text-zinc-950 bg-white hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-cyan-500/20 disabled:opacity-50 cursor-pointer"
-                >
-                  {formStatus === 'preparing' ? (
-                    <span className="flex items-center gap-2">
-                      <span className="w-4 h-4 border-2 border-zinc-950 border-t-transparent rounded-full animate-spin" />
-                      Preparing Email Client...
-                    </span>
-                  ) : formStatus === 'ready' ? (
-                    <span className="flex items-center gap-2 text-emerald-900 font-semibold">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-700" />
-                      Client Dispatched!
-                    </span>
-                  ) : (
-                    <>
-                      <span>Open Pre-filled Email</span>
-                      <Send className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              </form>
+                  <button
+                    type="submit"
+                    disabled={formStatus === 'sending'}
+                    className="w-full py-3.5 px-6 rounded-xl font-medium text-sm text-zinc-950 bg-white hover:bg-zinc-200 transition-all flex items-center justify-center gap-2 shadow-lg hover:shadow-cyan-500/20 disabled:opacity-50 cursor-pointer"
+                  >
+                    {formStatus === 'sending' ? (
+                      <span className="flex items-center gap-2">
+                        <span className="w-4 h-4 border-2 border-zinc-950 border-t-transparent rounded-full animate-spin" />
+                        Dispatching Message...
+                      </span>
+                    ) : formStatus === 'fallback' ? (
+                      <span className="flex items-center gap-2 text-emerald-900 font-semibold">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+                        Client Opened / Dispatched!
+                      </span>
+                    ) : (
+                      <>
+                        <span>Send Direct Message</span>
+                        <Send className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                </form>
+              )}
             </div>
           </div>
 

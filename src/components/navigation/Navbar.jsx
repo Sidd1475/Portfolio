@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ArrowUpRight, Cpu, Layers, FileText } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Cpu, Layers, FileText, Search } from 'lucide-react';
 import { siteConfig } from '@/lib/site-config';
 import { getAllPublicProjects } from '@/lib/projects';
 
@@ -70,6 +70,18 @@ export default function Navbar() {
 
         {/* Right Action & GitHub Link */}
         <div className="hidden sm:flex items-center gap-2.5">
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('open-command-palette'))}
+            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono text-zinc-400 hover:text-white glass-panel-subtle hover:border-cyan-500/40 transition-all cursor-pointer group"
+            title="Search projects and navigation (Cmd+K / Ctrl+K)"
+          >
+            <Search className="w-3.5 h-3.5 text-cyan-400 group-hover:scale-110 transition-transform" />
+            <span className="text-[11px]">Search</span>
+            <kbd className="px-1.5 py-0.5 rounded bg-surface-100 text-[10px] text-zinc-400 border border-white/10 group-hover:text-cyan-300">
+              ⌘K
+            </kbd>
+          </button>
+
           {siteConfig.resume && (
             <a
               href={siteConfig.resume}
@@ -151,6 +163,21 @@ export default function Navbar() {
                   <ArrowUpRight className="w-4 h-4 text-zinc-400" />
                 </a>
               )}
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  window.dispatchEvent(new CustomEvent('open-command-palette'));
+                }}
+                className="px-3 py-2 text-sm text-cyan-300 hover:text-white hover:bg-white/[0.04] rounded-lg transition-colors font-medium flex items-center justify-between"
+              >
+                <span className="flex items-center gap-2">
+                  <Search className="w-4 h-4 text-cyan-400" />
+                  <span>Search Command Palette</span>
+                </span>
+                <kbd className="px-1.5 py-0.5 rounded bg-surface-100 text-[10px] text-zinc-400 border border-white/10">
+                  ⌘K
+                </kbd>
+              </button>
             </div>
 
             <div className="pt-3 border-t border-white/10 flex flex-col gap-2">

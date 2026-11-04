@@ -2,6 +2,7 @@ import "./globals.css";
 import { siteConfig } from "@/lib/site-config";
 import Navbar from "@/components/navigation/Navbar";
 import Footer from "@/components/footer/Footer";
+import CommandPalette from "@/components/navigation/CommandPalette";
 
 export const metadata = {
   title: siteConfig.title,
@@ -57,6 +58,7 @@ export default function RootLayout({ children }) {
         </div>
 
         <Navbar />
+        <CommandPalette />
         <main className="relative z-10">{children}</main>
         <Footer />
       </body>
