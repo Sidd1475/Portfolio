@@ -2,12 +2,14 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import Link from 'next/link';
-import { ArrowDown, ArrowUpRight, ShieldCheck, Terminal, Layers } from 'lucide-react';
+import { ArrowDown, ArrowUpRight, ShieldCheck, Terminal, Layers, FileText } from 'lucide-react';
 import { siteConfig } from '@/lib/site-config';
+import { getAllPublicProjects } from '@/lib/projects';
 import { triggerBackgroundHover, clearBackgroundHover } from '@/lib/background-interaction';
 import { gsap, ScrollTrigger, isReducedMotion } from '@/lib/scroll-scrub';
 
 export default function Hero() {
+  const allProjects = getAllPublicProjects();
   const heroSectionRef = useRef(null);
   const heroContentRef = useRef(null);
   const line1Ref = useRef(null);
@@ -272,12 +274,25 @@ export default function Hero() {
                 </Link>
               </div>
 
+              {siteConfig.resume && (
+                <a
+                  href={siteConfig.resume}
+                  download="Siddharth_Mishra_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-4 py-3.5 rounded-full text-xs font-mono text-emerald-300 hover:text-white glass-panel-subtle hover:border-emerald-500/40 transition-all flex items-center gap-1.5 cursor-pointer"
+                >
+                  <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Resume (PDF)</span>
+                </a>
+              )}
+
               <Link
                 href="/projects"
                 className="px-4 py-3.5 rounded-full text-xs font-mono text-cyan-300 hover:text-white glass-panel-subtle hover:border-cyan-500/30 transition-all flex items-center gap-1.5"
               >
                 <Layers className="w-3.5 h-3.5 text-cyan-400" />
-                <span>All Projects (6)</span>
+                <span>All Projects ({allProjects.length})</span>
               </Link>
             </div>
           </div>

@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ArrowUpRight, Cpu, Layers } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Cpu, Layers, FileText } from 'lucide-react';
 import { siteConfig } from '@/lib/site-config';
+import { getAllPublicProjects } from '@/lib/projects';
 
 const navItems = [
   { name: 'About', href: '/#about' },
@@ -16,6 +17,7 @@ const navItems = [
 ];
 
 export default function Navbar() {
+  const allProjects = getAllPublicProjects();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -67,7 +69,19 @@ export default function Navbar() {
         </nav>
 
         {/* Right Action & GitHub Link */}
-        <div className="hidden sm:flex items-center gap-3">
+        <div className="hidden sm:flex items-center gap-2.5">
+          {siteConfig.resume && (
+            <a
+              href={siteConfig.resume}
+              download="Siddharth_Mishra_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono text-emerald-300 hover:text-white glass-panel-subtle hover:border-emerald-500/40 transition-all"
+            >
+              <FileText className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Resume</span>
+            </a>
+          )}
           <Link
             href={siteConfig.github}
             target="_blank"
@@ -117,11 +131,26 @@ export default function Navbar() {
                   <span>{item.name}</span>
                   {item.name === 'Archive' && (
                     <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
-                      6 Projects
+                      {allProjects.length} Systems
                     </span>
                   )}
                 </Link>
               ))}
+              {siteConfig.resume && (
+                <a
+                  href={siteConfig.resume}
+                  download="Siddharth_Mishra_Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-2 text-sm text-emerald-300 hover:text-white hover:bg-white/[0.04] rounded-lg transition-colors font-medium flex items-center justify-between"
+                >
+                  <span className="flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-emerald-400" />
+                    <span>Download Resume (PDF)</span>
+                  </span>
+                  <ArrowUpRight className="w-4 h-4 text-zinc-400" />
+                </a>
+              )}
             </div>
 
             <div className="pt-3 border-t border-white/10 flex flex-col gap-2">

@@ -8,6 +8,7 @@ export const siteConfig = {
   email: "siddharth140705@gmail.com",
   github: "https://github.com/Sidd1475/",
   linkedin: "https://www.linkedin.com/in/siddharth-mishra-a5250927a/",
+  resume: "/Siddharth_Mishra_Resume.pdf",
   about: {
     heading: "From models to systems.",
     description: [

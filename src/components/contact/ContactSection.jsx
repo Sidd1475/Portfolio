@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Mail, Github, Linkedin, Send, ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { Mail, Github, Linkedin, Send, ArrowUpRight, CheckCircle2, Copy, Check } from 'lucide-react';
 import { siteConfig } from '@/lib/site-config';
 import Link from 'next/link';
 import {
@@ -21,6 +21,17 @@ export default function ContactSection() {
   });
 
   const [formStatus, setFormStatus] = useState('idle');
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyEmail = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(siteConfig.email);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   const handleLinkHover = (id, color, e) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -86,7 +97,26 @@ export default function ContactSection() {
                     <span className="text-sm font-semibold">{siteConfig.email}</span>
                   </div>
                 </div>
-                <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-cyan-400 transition-colors" />
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={handleCopyEmail}
+                    className="p-2 rounded-lg bg-surface-200/80 hover:bg-surface-100 border border-white/10 text-zinc-400 hover:text-white transition-all flex items-center gap-1.5 text-xs font-mono"
+                    title="Copy email address"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        <span className="text-[11px] text-emerald-300">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="w-3.5 h-3.5" />
+                        <span className="text-[11px] hidden sm:inline">Copy</span>
+                      </>
+                    )}
+                  </button>
+                  <ArrowUpRight className="w-4 h-4 text-zinc-500 group-hover:text-cyan-400 transition-colors" />
+                </div>
               </Link>
 
               <Link

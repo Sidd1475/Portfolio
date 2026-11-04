@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { getProjectBySlug } from '@/lib/projects';
 import ProjectFooterNav from '@/components/projects/ProjectFooterNav';
+import SukoonVisualizer from '@/components/projects/SukoonVisualizer';
 import { notFound } from 'next/navigation';
 
 export const metadata = {
@@ -105,7 +106,7 @@ export default function SukoonPage() {
         </div>
 
         {/* Metrics Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-14">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
           {project.metrics.map((m, i) => (
             <div key={i} className="p-4 rounded-xl glass-panel border border-white/[0.08]">
               <span className="text-[10px] font-mono text-zinc-400 block uppercase mb-1">
@@ -117,6 +118,11 @@ export default function SukoonPage() {
               <span className="text-[11px] text-zinc-400">{m.detail}</span>
             </div>
           ))}
+        </div>
+
+        {/* Interactive Architecture & Safety Simulation */}
+        <div className="mb-14">
+          <SukoonVisualizer />
         </div>
 
         {/* Deep Technical Deep-Dive Sections */}
