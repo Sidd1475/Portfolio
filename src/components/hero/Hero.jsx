@@ -53,38 +53,36 @@ export default function Hero() {
       return;
     }
 
-    const isMobile = window.innerWidth < 768;
-    const pinDistance = isMobile ? 480 : 780;
-
     const ctx = gsap.context(() => {
-      // Initial states for progressive reveal
-      gsap.set(line1Ref.current, {
-        clipPath: 'inset(0% 100% 0% 0%)',
-        yPercent: 30,
-        opacity: 0.15,
-      });
+      // 1. Immediate entrance animation on mount: fast, elegant reveal so CTAs & Resume are visible right away
+      const entranceTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-      gsap.set(line2Ref.current, {
-        clipPath: 'inset(0% 100% 0% 0%)',
-        yPercent: 30,
-        opacity: 0.15,
-      });
+      entranceTl
+        .fromTo(
+          line1Ref.current,
+          { clipPath: 'inset(0% 100% 0% 0%)', yPercent: 15, opacity: 0.3 },
+          { clipPath: 'inset(0% 0% 0% 0%)', yPercent: 0, opacity: 1, duration: 0.7 }
+        )
+        .fromTo(
+          line2Ref.current,
+          { clipPath: 'inset(0% 100% 0% 0%)', yPercent: 15, opacity: 0.3 },
+          { clipPath: 'inset(0% 0% 0% 0%)', yPercent: 0, opacity: 1, duration: 0.7 },
+          '-=0.5'
+        )
+        .fromTo(
+          [leftColRef.current, rightColRef.current],
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.6, stagger: 0.15 },
+          '-=0.3'
+        );
 
-      gsap.set([leftColRef.current, rightColRef.current], {
-        opacity: 0,
-        y: 24,
-      });
-
-      // Master scrubbed timeline bound to hero scroll distance
-      const tl = gsap.timeline({
+      // 2. Smooth unpinned scroll progression as visitor moves down towards About
+      gsap.to(heroContentRef.current, {
         scrollTrigger: {
           trigger: heroSectionRef.current,
           start: 'top top',
-          end: `+=${pinDistance}`,
-          pin: true,
-          pinSpacing: true,
+          end: 'bottom top',
           scrub: 0.6,
-          anticipatePin: 1,
           onUpdate: (self) => {
             const p = self.progress;
             if (progressBarRef.current) {
@@ -95,69 +93,10 @@ export default function Hero() {
             }
           },
         },
+        opacity: 0.15,
+        y: -50,
+        ease: 'power1.in',
       });
-
-      // 1. Line 1 "SIDDHARTH" progressively reveals across scrub 0.0 -> 0.38
-      tl.to(
-        line1Ref.current,
-        {
-          clipPath: 'inset(0% 0% 0% 0%)',
-          yPercent: 0,
-          opacity: 1,
-          ease: 'power2.out',
-          duration: 0.38,
-        },
-        0.02
-      );
-
-      // 2. Line 2 "MISHRA" progressively reveals across scrub 0.18 -> 0.58
-      tl.to(
-        line2Ref.current,
-        {
-          clipPath: 'inset(0% 0% 0% 0%)',
-          yPercent: 0,
-          opacity: 1,
-          ease: 'power2.out',
-          duration: 0.40,
-        },
-        0.18
-      );
-
-      // 3. Left editorial column reveals across scrub 0.38 -> 0.72
-      tl.to(
-        leftColRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'power2.out',
-          duration: 0.34,
-        },
-        0.38
-      );
-
-      // 4. Right credentials card reveals across scrub 0.42 -> 0.75
-      tl.to(
-        rightColRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'power2.out',
-          duration: 0.33,
-        },
-        0.42
-      );
-
-      // 5. Seamless Dissolve into generative canvas as user completes Hero and enters About (0.86 -> 1.00)
-      tl.to(
-        heroContentRef.current,
-        {
-          opacity: 0,
-          y: -40,
-          ease: 'power2.in',
-          duration: 0.14,
-        },
-        0.86
-      );
     }, heroSectionRef);
 
     return () => {
@@ -280,9 +219,9 @@ export default function Hero() {
                   download="Siddharth_Mishra_Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-3.5 rounded-full text-xs font-mono text-emerald-300 hover:text-white glass-panel-subtle hover:border-emerald-500/40 transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-5 py-3.5 rounded-full text-xs sm:text-sm font-semibold text-emerald-300 hover:text-white bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 hover:border-emerald-400 transition-all flex items-center gap-2 cursor-pointer shadow-lg shadow-emerald-500/10"
                 >
-                  <FileText className="w-3.5 h-3.5 text-emerald-400" />
+                  <FileText className="w-4 h-4 text-emerald-400" />
                   <span>Resume (PDF)</span>
                 </a>
               )}
@@ -371,7 +310,7 @@ export default function Hero() {
         <div className="flex items-center gap-3 text-xs font-mono text-zinc-400">
           <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
           <span className="tracking-wider uppercase text-[11px] text-zinc-400">
-            SCROLL TO REVEAL
+            SYSTEM STATUS: ACTIVE // MAIT DELHI
           </span>
           <div className="w-20 sm:w-28 h-1 rounded-full bg-white/10 overflow-hidden hidden sm:block">
             <div

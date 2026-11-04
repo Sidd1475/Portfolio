@@ -69,7 +69,7 @@ export default function Navbar() {
         </nav>
 
         {/* Right Action & GitHub Link */}
-        <div className="hidden sm:flex items-center gap-2.5">
+        <div className="flex items-center gap-2 sm:gap-2.5">
           <button
             onClick={() => window.dispatchEvent(new CustomEvent('open-command-palette'))}
             className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-mono text-zinc-400 hover:text-white glass-panel-subtle hover:border-cyan-500/40 transition-all cursor-pointer group"
@@ -82,44 +82,47 @@ export default function Navbar() {
             </kbd>
           </button>
 
+          {/* Resume Download - Always visible on all screen sizes */}
           {siteConfig.resume && (
             <a
               href={siteConfig.resume}
               download="Siddharth_Mishra_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono text-emerald-300 hover:text-white glass-panel-subtle hover:border-emerald-500/40 transition-all"
+              className="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-mono text-emerald-300 hover:text-white bg-emerald-500/15 border border-emerald-500/30 hover:border-emerald-400 transition-all shadow-sm"
+              title="Download Siddharth Mishra's Resume (PDF)"
             >
               <FileText className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Resume</span>
+              <span className="font-medium">Resume</span>
             </a>
           )}
+
           <Link
             href={siteConfig.github}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono text-zinc-300 hover:text-white glass-panel-subtle hover:border-white/20 transition-all"
+            className="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono text-zinc-300 hover:text-white glass-panel-subtle hover:border-white/20 transition-all"
           >
             <span>GitHub</span>
             <ArrowUpRight className="w-3.5 h-3.5 text-zinc-400" />
           </Link>
           <Link
             href="/#contact"
-            className="px-4 py-1.5 rounded-full text-xs font-medium text-zinc-950 bg-white hover:bg-zinc-200 transition-colors shadow-sm"
+            className="hidden sm:inline-flex px-4 py-1.5 rounded-full text-xs font-medium text-zinc-950 bg-white hover:bg-zinc-200 transition-colors shadow-sm"
           >
             Get in touch
           </Link>
-        </div>
 
-        {/* Mobile Menu Toggle Button */}
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="md:hidden p-2 rounded-full glass-pill text-zinc-300 hover:text-white"
-          aria-label="Toggle navigation menu"
-          aria-expanded={mobileMenuOpen}
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+          {/* Mobile Menu Toggle Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-full glass-pill text-zinc-300 hover:text-white"
+            aria-label="Toggle navigation menu"
+            aria-expanded={mobileMenuOpen}
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Overlay */}
