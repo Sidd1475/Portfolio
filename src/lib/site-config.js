@@ -11,25 +11,47 @@ export const siteConfig = {
   resume: "/Siddharth_Mishra_Resume.pdf",
   about: {
     heading: "From models to systems.",
+    intro: "Computer Science undergraduate at Maharaja Agrasen Institute of Technology (MAIT, Delhi) with an 8.98 CGPA, specializing in AI Engineering and production full-stack systems.",
     description: [
-      "I'm a Computer Science undergraduate at Maharaja Agrasen Institute of Technology (MAIT), focused on building practical AI applications. My work spans machine learning, LLM-powered applications, retrieval-augmented generation, agentic workflows, backend engineering, and full-stack development.",
-      "I enjoy understanding the entire path from an input and a model to a useful product: structuring data, orchestrating AI components, designing APIs, evaluating outputs, and building interfaces that make the results accessible.",
-      "Rather than treating AI as an isolated black box, I approach it from an engineering standpoint—focusing on deterministic orchestration, modular graph-based state management, low-latency retrieval pipelines, and rock-solid software infrastructure."
+      "I specialize in building practical AI applications—combining stateful agentic workflows (LangGraph), grounded semantic retrieval (RAG + FAISS), and predictive machine learning models.",
+      "My engineering focus is reliability: transforming probabilistic models into production-ready software backed by asynchronous FastAPI microservices, strict schema validation, and intuitive reactive interfaces."
+    ],
+    specializations: [
+      {
+        title: "Agentic AI & Orchestration",
+        desc: "Stateful multi-actor DAG workflows (LangGraph) with deterministic schema validation.",
+        icon: "Workflow",
+      },
+      {
+        title: "Grounded RAG Systems",
+        desc: "FAISS dense vector retrieval with timestamped source citations and zero hallucination.",
+        icon: "ShieldCheck",
+      },
+      {
+        title: "Production ML Pipelines",
+        desc: "Feature engineering, high-cardinality target encoding, and explainable tree ensembles.",
+        icon: "Cpu",
+      },
+      {
+        title: "Full-Stack Software Architecture",
+        desc: "FastAPI REST backends, Next.js App Router, Docker microservices, and MongoDB.",
+        icon: "Layers",
+      }
     ],
     coreValues: [
       {
         title: "Deterministic Orchestration",
-        desc: "Structuring complex multi-step reasoning into bounded, modular DAG workflows rather than fragile single prompts.",
+        desc: "Structuring multi-step reasoning into bounded, modular DAG workflows rather than fragile monolithic prompts.",
         icon: "Workflow"
       },
       {
         title: "Production Grounding",
-        desc: "Pairing vector search, duplicate elimination, and verifiable citation anchors to eliminate hallucination.",
+        desc: "Pairing vector search, sliding chunks, and verifiable citations to eliminate hallucination.",
         icon: "ShieldCheck"
       },
       {
         title: "Full-Stack Reliability",
-        desc: "Integrating FastAPI endpoints, schema validation, persistent storage, and reactive frontends for end-to-end usability.",
+        desc: "Integrating async FastAPI endpoints, Pydantic schemas, and reactive frontends for end-to-end usability.",
         icon: "Layers"
       }
     ]

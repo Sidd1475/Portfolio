@@ -2,62 +2,89 @@
 
 import React, { useRef } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowUpRight, Github, CheckCircle2, ChevronRight, Sparkles } from 'lucide-react';
-import CareerLensVisualizer from './CareerLensVisualizer';
-import AgriInsightVisualizer from './AgriInsightVisualizer';
-import YTGptVisualizer from './YTGptVisualizer';
-import SukoonVisualizer from './SukoonVisualizer';
-import CareerLensPipelineGraphic from './CareerLensPipelineGraphic';
-import AgriInsightChartGraphic from './AgriInsightChartGraphic';
-import YTGptRetrievalGraphic from './YTGptRetrievalGraphic';
+import { ArrowUpRight, Github, ChevronRight, Sparkles, ExternalLink, Activity, Database, Workflow, Cpu } from 'lucide-react';
 import { triggerBackgroundHover, clearBackgroundHover } from '@/lib/background-interaction';
 
-// Project specific accent configurations
+// Project theme configurations
 const PROJECT_THEMES = {
   careerlens: {
-    badge: 'border-violet-500/30 text-violet-300 bg-violet-500/10',
-    panelGlow: 'hover:shadow-[0_0_40px_rgba(139,92,246,0.14)] border-violet-500/20 hover:border-violet-500/40',
-    accentRgb: [168, 85, 247],
-    glowGradient: 'from-violet-500/5 via-transparent to-transparent',
+    accent: 'violet',
+    border: 'border-violet-500/20 hover:border-violet-500/50',
+    glow: 'hover:shadow-[0_0_35px_rgba(139,92,246,0.15)]',
+    badge: 'bg-violet-500/10 text-violet-300 border-violet-500/25',
     accentText: 'text-violet-400',
-    accentBorder: 'border-violet-500/30',
+    highlightBg: 'bg-violet-500/5 border-violet-500/20 text-violet-200',
+    previewBg: 'from-violet-950/40 via-surface-200/50 to-surface-300/40',
+    accentRgb: [139, 92, 246],
+    keyTechs: ['FastAPI', 'LangGraph', 'Gemini API', 'Next.js'],
+    oneLiner: 'AI resume analysis platform that evaluates candidate competencies against job specs via an orchestrated LangGraph workflow.',
+    highlight: 'Deterministic 4-stage StateGraph with concurrent resume & JD extraction.',
+    previewMeta: '4-STAGE DAG // LANGGRAPH',
+    nodes: ['Resume Parse', 'JD Extract', 'ATS Scoring', 'Synthesis'],
   },
   agriinsight: {
-    badge: 'border-emerald-500/30 text-emerald-300 bg-emerald-500/10',
-    panelGlow: 'hover:shadow-[0_0_40px_rgba(16,185,129,0.14)] border-emerald-500/20 hover:border-emerald-500/40',
-    accentRgb: [16, 185, 129],
-    glowGradient: 'from-emerald-500/5 via-transparent to-transparent',
+    accent: 'emerald',
+    border: 'border-emerald-500/20 hover:border-emerald-500/50',
+    glow: 'hover:shadow-[0_0_35px_rgba(16,185,129,0.15)]',
+    badge: 'bg-emerald-500/10 text-emerald-300 border-emerald-500/25',
     accentText: 'text-emerald-400',
-    accentBorder: 'border-emerald-500/30',
+    highlightBg: 'bg-emerald-500/5 border-emerald-500/20 text-emerald-200',
+    previewBg: 'from-emerald-950/40 via-surface-200/50 to-surface-300/40',
+    accentRgb: [16, 185, 129],
+    keyTechs: ['Scikit-learn', 'Random Forest', 'Python', 'Streamlit'],
+    oneLiner: 'District-level agricultural crop yield forecasting and feature interpretability trained on 340,000+ national records.',
+    highlight: 'Achieved Test R² ≈ 0.80 with TargetEncoder high-cardinality representation.',
+    previewMeta: 'ML PIPELINE // RANDOM FOREST',
+    nodes: ['Data Ingest', 'TargetEncoding', 'RF Regressor', 'SHAP Insights'],
   },
   'yt-gpt': {
-    badge: 'border-sky-500/30 text-sky-300 bg-sky-500/10',
-    panelGlow: 'hover:shadow-[0_0_40px_rgba(56,189,248,0.14)] border-sky-500/20 hover:border-sky-500/40',
-    accentRgb: [56, 189, 248],
-    glowGradient: 'from-sky-500/5 via-transparent to-transparent',
+    accent: 'sky',
+    border: 'border-sky-500/20 hover:border-sky-500/50',
+    glow: 'hover:shadow-[0_0_35px_rgba(56,189,248,0.15)]',
+    badge: 'bg-sky-500/10 text-sky-300 border-sky-500/25',
     accentText: 'text-sky-400',
-    accentBorder: 'border-sky-500/30',
+    highlightBg: 'bg-sky-500/5 border-sky-500/20 text-sky-200',
+    previewBg: 'from-sky-950/40 via-surface-200/50 to-surface-300/40',
+    accentRgb: [56, 189, 248],
+    keyTechs: ['FAISS', 'Sentence Transformers', 'Gemini API', 'Streamlit'],
+    oneLiner: 'Conversational question-answering grounded in YouTube video transcripts with sub-millisecond semantic search.',
+    highlight: '8-stage RAG pipeline with timestamped source citations & deduplication.',
+    previewMeta: 'VECTOR RAG // FAISS DB',
+    nodes: ['Ingestion', 'Chunking', 'FAISS Search', 'Gemini Synthesis'],
   },
   sukoon: {
-    badge: 'border-teal-500/30 text-teal-300 bg-teal-500/10',
-    panelGlow: 'hover:shadow-[0_0_40px_rgba(20,184,166,0.14)] border-teal-500/20 hover:border-teal-500/40',
-    accentRgb: [20, 184, 166],
-    glowGradient: 'from-teal-500/5 via-transparent to-transparent',
+    accent: 'teal',
+    border: 'border-teal-500/20 hover:border-teal-500/50',
+    glow: 'hover:shadow-[0_0_35px_rgba(20,184,166,0.15)]',
+    badge: 'bg-teal-500/10 text-teal-300 border-teal-500/25',
     accentText: 'text-teal-400',
-    accentBorder: 'border-teal-500/30',
+    highlightBg: 'bg-teal-500/5 border-teal-500/20 text-teal-200',
+    previewBg: 'from-teal-950/40 via-surface-200/50 to-surface-300/40',
+    accentRgb: [20, 184, 166],
+    keyTechs: ['Next.js', 'FastAPI', 'Gemini API', 'MongoDB'],
+    oneLiner: 'AI-powered mental wellness companion with real-time emotional triage and anonymous peer support.',
+    highlight: 'Ghost Mode privacy protocol with deterministic real-time crisis escalation.',
+    previewMeta: 'MULTIMODAL // CBT ASSISTANT',
+    nodes: ['Voice/Chat', 'Safety Filter', 'Empathetic LLM', 'Ghost Mode'],
   },
 };
 
 export default function ProjectCard({ project, index }) {
   const cardRef = useRef(null);
   const theme = PROJECT_THEMES[project.id] || {
-    badge: 'border-cyan-500/30 text-cyan-300 bg-cyan-500/10',
-    panelGlow: 'hover:shadow-[0_0_40px_rgba(6,182,212,0.12)] border-white/[0.08] hover:border-white/20',
-    accentRgb: [99, 102, 241],
-    glowGradient: 'from-cyan-500/5 via-transparent to-transparent',
+    accent: 'cyan',
+    border: 'border-cyan-500/20 hover:border-cyan-500/50',
+    glow: 'hover:shadow-[0_0_35px_rgba(6,182,212,0.15)]',
+    badge: 'bg-cyan-500/10 text-cyan-300 border-cyan-500/25',
     accentText: 'text-cyan-400',
-    accentBorder: 'border-white/10',
+    highlightBg: 'bg-cyan-500/5 border-cyan-500/20 text-cyan-200',
+    previewBg: 'from-cyan-950/40 via-surface-200/50 to-surface-300/40',
+    accentRgb: [34, 211, 238],
+    keyTechs: project.technologies.slice(0, 4),
+    oneLiner: project.tagline || project.description,
+    highlight: project.metrics?.[0]?.detail || 'Production engineered AI system.',
+    previewMeta: 'SYSTEM ARCHITECTURE',
+    nodes: ['Input', 'Processing', 'Model', 'Output'],
   };
 
   const handleMouseEnter = () => {
@@ -74,135 +101,142 @@ export default function ProjectCard({ project, index }) {
   return (
     <article
       id={`project-${project.id}`}
-      className="scroll-mt-28 py-10 lg:py-16"
+      ref={cardRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`group rounded-2xl glass-panel border ${theme.border} backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 ${theme.glow} flex flex-col justify-between overflow-hidden h-full shadow-lg`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Translucent Glassmorphic Project Panel */}
-        <div
-          ref={cardRef}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          className={`group relative rounded-3xl p-6 sm:p-8 lg:p-10 backdrop-blur-xl bg-surface-100/50 border transition-all duration-500 hover:-translate-y-1 ${theme.panelGlow} overflow-hidden shadow-2xl`}
-        >
-          {/* Subtle Project Color Reflection Gradient */}
-          <div
-            className={`absolute top-0 right-0 w-full h-full bg-gradient-to-br ${theme.glowGradient} pointer-events-none opacity-80 group-hover:opacity-100 transition-opacity duration-500`}
-          />
+      <div>
+        {/* 1. Visual Preview Header / Schematic Thumbnail */}
+        <div className={`relative p-4 sm:p-5 bg-gradient-to-br ${theme.previewBg} border-b border-white/[0.06] overflow-hidden`}>
+          {/* Subtle Ambient Background Mesh */}
+          <div className="absolute inset-0 bg-grain opacity-20 pointer-events-none" />
 
-          {/* Editorial Card Header */}
-          <div className="relative z-10 flex flex-wrap items-center justify-between gap-4 mb-8 pb-6 border-b border-white/[0.06]">
-            <div className="flex items-center gap-2.5">
-              <span className={`px-3 py-1 rounded-full text-xs font-mono font-medium border ${theme.badge}`}>
-                {project.category}
+          {/* Top Status & Category Bar */}
+          <div className="flex items-center justify-between gap-2 mb-3 relative z-10">
+            <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono font-medium border ${theme.badge}`}>
+              {project.category.split('&')[0].trim()}
+            </span>
+            {project.isFlagship && (
+              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-[10px] font-mono text-indigo-300 font-semibold">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                FLAGSHIP
               </span>
-              {project.isFlagship && (
-                <span className="px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-xs font-mono text-indigo-300 font-medium flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
-                  FLAGSHIP SYSTEM
-                </span>
-              )}
-            </div>
-
-            <div className="flex items-center gap-3">
-              <Link
-                href={project.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono text-zinc-300 hover:text-white glass-panel-subtle hover:border-white/20 transition-all cursor-pointer"
-              >
-                <Github className="w-3.5 h-3.5" />
-                <span>Repository</span>
-                <ArrowUpRight className="w-3.5 h-3.5 text-zinc-500 group-hover:text-white transition-colors" />
-              </Link>
-              <Link
-                href={`/projects/${project.id}`}
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-medium text-zinc-950 bg-white hover:bg-zinc-200 transition-all shadow-sm cursor-pointer"
-              >
-                <span>Case Study</span>
-                <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            </div>
+            )}
           </div>
 
-          {/* Two-Column Editorial Showcase */}
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-            
-            {/* Left Column: Narrative, Self-Drawing Graphic & Stack */}
-            <div className="lg:col-span-5 flex flex-col justify-between">
-              <div>
-                <h3
-                  className="text-3xl sm:text-4xl lg:text-[2.75rem] font-display font-bold text-white tracking-tight leading-[1.08] mb-2"
+          {/* Miniature Architectural Workflow Nodes */}
+          <div className="relative z-10 my-1">
+            <div className="text-[10px] font-mono text-zinc-400 tracking-wider mb-2 flex items-center justify-between">
+              <span className="flex items-center gap-1">
+                <Workflow className="w-3 h-3 text-zinc-400" />
+                <span>{theme.previewMeta}</span>
+              </span>
+              <span className="text-[9px] text-zinc-400 group-hover:text-zinc-200 transition-colors">
+                ACTIVE
+              </span>
+            </div>
+
+            {/* Connected Micro Nodes */}
+            <div className="grid grid-cols-4 gap-1.5 pt-1">
+              {theme.nodes.map((node, i) => (
+                <div
+                  key={node}
+                  className="p-1.5 rounded-md bg-surface-100/80 border border-white/[0.08] text-center"
                 >
-                  {project.title}
-                </h3>
-                <p className={`text-xs font-mono mb-4 tracking-wide ${theme.accentText}`}>
-                  {project.subtitle}
-                </p>
-
-                {/* Self-Drawing Technical Architecture Graphic */}
-                {project.id === 'careerlens' && <CareerLensPipelineGraphic />}
-                {project.id === 'agriinsight' && <AgriInsightChartGraphic />}
-                {project.id === 'yt-gpt' && <YTGptRetrievalGraphic />}
-
-                <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-6 font-sans">
-                  {project.description}
-                </p>
-
-                {/* Technical Contributions */}
-                <div className="mb-6 space-y-2">
-                  <h4 className="text-[10px] font-mono text-zinc-400 tracking-wider uppercase mb-1.5">
-                    Key Technical Contributions:
-                  </h4>
-                  {project.technicalHighlights.slice(0, 3).map((highlight, idx) => (
-                    <div key={idx} className="flex items-start gap-2.5 text-xs text-zinc-300">
-                      <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 mt-0.5 ${theme.accentText}`} />
-                      <span className="leading-normal">{highlight}</span>
-                    </div>
-                  ))}
+                  <span className="block text-[8px] font-mono text-zinc-400">0{i + 1}</span>
+                  <span className="block text-[10px] font-mono font-medium text-zinc-200 truncate">
+                    {node}
+                  </span>
                 </div>
-
-                {/* Stack Badges */}
-                <div className="pt-4 border-t border-white/[0.06]">
-                  <h4 className="text-[10px] font-mono text-zinc-400 tracking-wider uppercase mb-2">
-                    Technologies:
-                  </h4>
-                  <div className="flex flex-wrap gap-1.5">
-                    {project.technologies.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2.5 py-1 rounded-md bg-surface-200/60 border border-white/[0.06] text-xs font-mono text-zinc-300"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Metrics Row */}
-              <div className="grid grid-cols-2 gap-3 mt-6 pt-5 border-t border-white/[0.06]">
-                {project.metrics.slice(0, 2).map((metric, i) => (
-                  <div key={i} className="p-3 rounded-xl bg-surface-300/40 border border-white/[0.05]">
-                    <span className="text-[10px] font-mono text-zinc-400 block">{metric.label}</span>
-                    <span className="text-base font-bold font-display text-white">{metric.value}</span>
-                  </div>
-                ))}
-              </div>
+              ))}
             </div>
-
-            {/* Right Column: Interactive Hands-on Architecture Visualizer */}
-            <div className="lg:col-span-7">
-              {project.id === 'careerlens' && <CareerLensVisualizer />}
-              {project.id === 'agriinsight' && <AgriInsightVisualizer />}
-              {project.id === 'yt-gpt' && <YTGptVisualizer />}
-              {project.id === 'sukoon' && <SukoonVisualizer />}
-            </div>
-
           </div>
-
         </div>
 
+        {/* 2. Main Content Body */}
+        <div className="p-5 sm:p-6 flex flex-col gap-4">
+          {/* Title & Subtitle */}
+          <div>
+            <div className="flex items-baseline justify-between gap-2">
+              <h3 className="text-xl sm:text-2xl font-display font-bold text-white tracking-tight group-hover:text-white transition-colors">
+                {project.title}
+              </h3>
+              <span className="text-[11px] font-mono text-zinc-400">{project.number}</span>
+            </div>
+            <p className={`text-xs font-mono font-medium tracking-wide ${theme.accentText} mt-0.5`}>
+              {project.subtitle}
+            </p>
+          </div>
+
+          {/* 3. One-line Impactful Description */}
+          <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed font-sans line-clamp-2">
+            {theme.oneLiner}
+          </p>
+
+          {/* 4. Compact Technology Badges (3-5 max) */}
+          <div className="flex flex-wrap gap-1.5">
+            {theme.keyTechs.map((tech) => (
+              <span
+                key={tech}
+                className="px-2 py-0.5 rounded-md bg-surface-200/80 border border-white/[0.06] text-[11px] font-mono text-zinc-300 group-hover:border-white/15 transition-colors"
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+
+          {/* 5. Key Highlight / Accomplishment Callout */}
+          <div className={`p-2.5 rounded-xl border text-xs font-mono leading-relaxed flex items-start gap-2 ${theme.highlightBg}`}>
+            <Sparkles className="w-3.5 h-3.5 shrink-0 mt-0.5 text-amber-300" />
+            <div className="text-[11px]">
+              <strong className="text-white block font-semibold">Key Achievement:</strong>
+              <span className="text-zinc-300">{theme.highlight}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 6. Footer Action Links */}
+      <div className="p-5 sm:p-6 pt-0 mt-2 border-t border-white/[0.06] flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          {project.github && (
+            <Link
+              href={project.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-white transition-colors"
+              title="View Source on GitHub"
+            >
+              <Github className="w-3.5 h-3.5" />
+              <span>Code</span>
+              <ArrowUpRight className="w-3 h-3 text-zinc-500" />
+            </Link>
+          )}
+
+          {project.liveDemo && (
+            <Link
+              href={project.liveDemo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-mono text-emerald-400 hover:text-emerald-300 transition-colors"
+              title="Open Live Deployment"
+            >
+              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Live App</span>
+              <ArrowUpRight className="w-3 h-3 text-zinc-500" />
+            </Link>
+          )}
+        </div>
+
+        {/* Case Study Link */}
+        <Link
+          href={`/projects/${project.id}`}
+          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium text-zinc-950 bg-white hover:bg-zinc-200 transition-all font-sans shadow-sm"
+        >
+          <span>Case Study</span>
+          <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
+        </Link>
       </div>
     </article>
   );

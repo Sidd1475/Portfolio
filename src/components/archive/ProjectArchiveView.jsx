@@ -141,7 +141,7 @@ export default function ProjectArchiveView() {
                   <p className="text-xs font-mono text-indigo-300 mb-3">
                     {project.subtitle}
                   </p>
-                  <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-5">
+                  <p className="text-xs sm:text-sm text-zinc-300 leading-relaxed mb-4 line-clamp-2 font-sans">
                     {project.description}
                   </p>
 
