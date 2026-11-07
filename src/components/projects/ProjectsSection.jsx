@@ -41,7 +41,7 @@ export default function ProjectsSection() {
           </div>
           <div className="flex flex-col items-start md:items-end gap-2 max-w-md">
             <p className="text-xs sm:text-sm text-zinc-400 font-mono leading-relaxed md:text-right">
-              Glanceable overview of core AI &amp; ML architectures. Click any card to explore full case studies with interactive visualizers.
+              Core AI &amp; ML systems. Click any card for the full architectural breakdown.
             </p>
             <Link
               href="/projects"
