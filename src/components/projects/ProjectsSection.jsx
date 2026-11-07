@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import Link from 'next/link';
-import { Sparkles, ArrowRight, Layers, FolderGit2 } from 'lucide-react';
+import { ArrowRight, Layers, FolderGit2 } from 'lucide-react';
 import { getFeaturedProjects, getAllPublicProjects } from '@/lib/projects';
 import ProjectCard from './ProjectCard';
+import ProjectDetailsModal from './ProjectDetailsModal';
 import {
   ScrollRevealHeadingMultiline,
   ScrollRevealBadge,
-  ScrollRevealParagraph,
 } from '@/components/ui/ScrollReveal';
 import { triggerBackgroundHover, clearBackgroundHover } from '@/lib/background-interaction';
 
@@ -16,6 +16,7 @@ export default function ProjectsSection() {
   const featured = getFeaturedProjects();
   const allProjects = getAllPublicProjects();
   const bannerRef = useRef(null);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   const handleBannerHover = () => {
     if (bannerRef.current) {
@@ -41,7 +42,7 @@ export default function ProjectsSection() {
           </div>
           <div className="flex flex-col items-start md:items-end gap-2 max-w-md">
             <p className="text-xs sm:text-sm text-zinc-400 font-mono leading-relaxed md:text-right">
-              Core AI &amp; ML systems. Click any card for the full architectural breakdown.
+              Glanceable production systems. Click any card or &quot;View Details&quot; for instant architecture breakdown.
             </p>
             <Link
               href="/projects"
@@ -58,10 +59,22 @@ export default function ProjectsSection() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 items-stretch">
           {featured.map((project, index) => (
-            <ProjectCard key={project.id} project={project} index={index} />
+            <ProjectCard 
+              key={project.id} 
+              project={project} 
+              index={index} 
+              onOpenDetails={setSelectedProject}
+            />
           ))}
         </div>
       </div>
+
+      {/* Interactive Project Details Quick-View Modal */}
+      <ProjectDetailsModal
+        project={selectedProject}
+        isOpen={!!selectedProject}
+        onClose={() => setSelectedProject(null)}
+      />
 
       {/* Prominent Explore All Projects CTA Banner */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-14">
